@@ -13,7 +13,7 @@ class Rectboard:
                 d = mapdata["portals"]
                 self.portals = dict()
                 for key in d:
-                    nkey = tuple(key.split('_'))
+                    nkey =key.split('_')
                     nkey = tuple([int(n) for n in nkey])
                     self.portals[nkey] = d[key]
 
@@ -47,9 +47,5 @@ class Rectboard:
                 return loc
 
 if __name__ == '__main__':
-    board = Rectboard((5,5),'levels/map.json')
-    print board.isValidLoc((1,7))
-    print board.mapcenter
-    print board.locs_around((0,0))
-    print board.toward((0,0),board.mapcenter) 
-
+    board = Rectboard((5,5),'levels/level1.json')
+    print board.portals

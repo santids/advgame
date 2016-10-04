@@ -2,12 +2,10 @@ import pygame as pg
 from pygame.locals import *
 import numpy as np
 import traceback,sys
-from rectboard import Rectboard
 from display.mapdisplay import MapDisplay
 from hero import Hero
 import display.colors as colors
 import utils.vect2d as vect
-
 
 
 class Game():
@@ -40,18 +38,18 @@ class Game():
         print "Bye"
         pg.quit()
         sys.exit()
-
+        
 class AdvGame(Game):
     def __init__(self,settings=dict()):
         self.settings = settings
         Game.__init__(self,settings["width"],settings["height"],caption="Adventure Game")
     def start(self):
         """Start the game"""
+
         self.displaylist = []
-        self.board = Rectboard((3,3),'levels/level1.json')
-        self.mapdisplay = MapDisplay(self.board)
+        self.mapdisplay = MapDisplay((3,3),"levels/level1.json")
         self.hero = Hero()
-        loc = vect.div(self.mapdisplay.board.shape,2)
+        loc = vect.div(self.mapdisplay.shape,2)
         pos = self.mapdisplay.loctopoint(loc)
         self.hero.x, self.hero.y = pos
         self.input = dict()
@@ -76,6 +74,7 @@ class AdvGame(Game):
             self.mapdisplay.draw(self.screen)
             self.hero.draw(self.screen)
             pg.display.update()
+
 
 
 if __name__ == '__main__':
