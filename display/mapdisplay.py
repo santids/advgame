@@ -3,42 +3,36 @@ import numpy as np
 from displayobj import DisplayObj
 from rectboard import Rectboard 
 import colors
-
+import tileinfo
 
 class MapDisplay(DisplayObj,Rectboard):
-    def __init__(self,shape,map):
-        Rectboard.__init__(self,shape,map)
+    def __init__(self,shape,mapsrc=None):
+        Rectboard.__init__(self,shape,mapsrc)
         DisplayObj.__init__(self)
-        self.xpad = 100
-        self.ypad = 100
+        self.x= 20
+        self.y= 20
         self.tsize = 25
         self.width = self.tsize*self.shape[1]
         self.height = self.tsize*self.shape[0]
     def draw(self,surface):
         """Draw map on surface"""
-        color = colors.brown8
         for loc in self.alllocs:
-            if self.map[loc] == 0:
-                color = colors.gray6
-            elif self.map[loc] == 1:
-                color = colors.black
-            elif self.map[loc] == 2:
-                color = colors.cyan6
+            color = tileinfo.color(self.map[loc])
             point = self.loctopoint(loc)
             pg.draw.rect(surface,color,(point[0],point[1],self.tsize,self.tsize),0)
 
     def loctopoint(self,loc):
        """Given a location of the map returns the corresponding surface point"""
        locy,locx = loc
-       x = self.xpad+locx*self.tsize
-       y = self.ypad+locy*self.tsize
+       x = self.x+locx*self.tsize
+       y = self.y+locy*self.tsize
 
        return (x,y)
     def pointtoloc(self,point):
        """Given a point of the surface returns the loc in map"""
        x,y = point
-       xloc = (y-self.ypad)/self.tsize
-       yloc = (x-self.xpad)/self.tsize
+       xloc = (y-self.y)/self.tsize
+       yloc = (x-self.x)/self.tsize
 
        if self.isValidLoc((xloc,yloc)):
            return (xloc,yloc)

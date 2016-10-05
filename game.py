@@ -6,7 +6,7 @@ from display.mapdisplay import MapDisplay
 from hero import Hero
 import display.colors as colors
 import utils.vect2d as vect
-
+import json
 
 class Game():
     def __init__(self,width,height,fps=25,caption="My Game"):
@@ -45,10 +45,9 @@ class AdvGame(Game):
         Game.__init__(self,settings["width"],settings["height"],caption="Adventure Game")
     def start(self):
         """Start the game"""
-
         self.displaylist = []
-        self.mapdisplay = MapDisplay((3,3),"levels/level1.json")
-        self.hero = Hero()
+        self.mapdisplay = MapDisplay((3,3),"levels/level0.json")
+        self.hero = Hero(self.settings)
         loc = vect.div(self.mapdisplay.shape,2)
         pos = self.mapdisplay.loctopoint(loc)
         self.hero.x, self.hero.y = pos
@@ -59,6 +58,7 @@ class AdvGame(Game):
         """The game loop"""
         while self.gamealive:
             deltatime = self.clock.tick(self.fps)
+            self.input["deltatime"] = deltatime
             for event in pg.event.get():
                 if event.type == QUIT:
                     self.close()
@@ -80,7 +80,8 @@ class AdvGame(Game):
 if __name__ == '__main__':
     game = None
     try:
-        settings ={"width":640,"height":480}
+        settingsfile = open('settings.json')
+        settings = json.load(settingsfile)
         game = AdvGame(settings)
     except Exception as ex:
         print type(ex),ex

@@ -6,6 +6,13 @@ import json
 class Rectboard:
     def __init__(self, shape,mapsrc=None):
         if mapsrc:
+            self.loadlevel(mapsrc)
+        else:
+            self.map = np.zeros(shape,dtype=int)
+        self.shape = self.map.shape
+        self.alllocs = [(r,c) for r in xrange(self.shape[0]) for c in xrange(self.shape[1])]
+        self.mapcenter = vect.div(self.shape,2)
+    def loadlevel(self,mapsrc):
             mapfile = open(mapsrc)
             mapdata = json.load(mapfile)
             self.map = np.asarray(mapdata["map"])
@@ -16,15 +23,9 @@ class Rectboard:
                     nkey =key.split('_')
                     nkey = tuple([int(n) for n in nkey])
                     self.portals[nkey] = d[key]
-
             else :
                 self.portals = dict()
-            print self.portals
-        else:
-            self.map = np.zeros(shape,dtype=int)
-        self.shape = self.map.shape
-        self.alllocs = [(r,c) for r in xrange(self.shape[0]) for c in xrange(self.shape[1])]
-        self.mapcenter = vect.div(self.shape,2)
+
     def isValidLoc(self,loc):
         """True if loc is inside map bounds"""
         return vect.isInsideRect(loc,self.shape)
