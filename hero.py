@@ -2,7 +2,8 @@ from display.mob import Mob
 import pygame as pg
 from pygame.locals import *
 import display.colors as colors
-import math,tileinfo
+import math
+from display.tileinfo import TileMgr
 
 class Hero(Mob):
     def __init__(self,settings):
@@ -27,12 +28,15 @@ class Hero(Mob):
                 self.level = newlevel
                 self.world.loadlevel(self.settings["level-path"]+newlevel+'.json')
     def handlemovement(self,input):
+        tilemgr = TileMgr()
         deltax = int(math.ceil( self.speed*input["deltatime"]/100))
         if K_UP in input:
            self.moveup(deltax)
            loc1 = self.world.pointtoloc(self.topleft())
            loc2 = self.world.pointtoloc(self.topright())
-           if tileinfo.isobstacle(self.world.map[loc1]) or tileinfo.isobstacle(self.world.map[loc2]):
+           tile1 = tilemgr.tile(self.world.map[loc1])
+           tile2 = tilemgr.tile(self.world.map[loc2])
+           if tile1.isobstacle or tile2.isobstacle:
                cloc = self.world.pointtoloc(self.center())
                lpos = self.world.loctop(cloc)
                self.movedown(abs(lpos-self.y))
@@ -40,7 +44,9 @@ class Hero(Mob):
             self.movedown(deltax)
             loc1 = self.world.pointtoloc(self.bottomleft())
             loc2 = self.world.pointtoloc(self.bottomright())
-            if tileinfo.isobstacle(self.world.map[loc1]) or tileinfo.isobstacle(self.world.map[loc2]):
+            tile1 = tilemgr.tile(self.world.map[loc1])
+            tile2 = tilemgr.tile(self.world.map[loc2])
+            if tile1.isobstacle or tile2.isobstacle:
                 cloc = self.world.pointtoloc(self.center())
                 lpos = self.world.locbottom(cloc)
                 self.moveup(abs(lpos-self.down()[1])+1)
@@ -48,7 +54,9 @@ class Hero(Mob):
             self.moveleft(deltax)
             loc1 = self.world.pointtoloc(self.topleft())
             loc2 = self.world.pointtoloc(self.bottomleft())
-            if tileinfo.isobstacle(self.world.map[loc1]) or tileinfo.isobstacle(self.world.map[loc2]):
+            tile1 = tilemgr.tile(self.world.map[loc1])
+            tile2 = tilemgr.tile(self.world.map[loc2])
+            if tile1.isobstacle or tile2.isobstacle:
                 cloc = self.world.pointtoloc(self.center())
                 lpos = self.world.locleft(cloc)
                 self.moveright(abs(lpos-self.left()[0])+1)
@@ -56,7 +64,9 @@ class Hero(Mob):
             self.moveright(deltax)
             loc1 = self.world.pointtoloc(self.bottomright())
             loc2 = self.world.pointtoloc(self.topright())
-            if tileinfo.isobstacle(self.world.map[loc1]) or tileinfo.isobstacle(self.world.map[loc2]):
+            tile1 = tilemgr.tile(self.world.map[loc1])
+            tile2 = tilemgr.tile(self.world.map[loc2])
+            if tile1.isobstacle or tile2.isobstacle:
                 cloc = self.world.pointtoloc(self.center())
                 lpos = self.world.locright(cloc)
                 self.moveleft(abs(lpos-self.right()[0])+1)

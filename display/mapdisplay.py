@@ -3,7 +3,8 @@ import numpy as np
 from displayobj import DisplayObj
 from rectboard import Rectboard 
 import colors
-import tileinfo
+from tileinfo import TileMgr
+from spritesheet import Sheet
 
 class MapDisplay(DisplayObj,Rectboard):
     def __init__(self,shape,mapsrc=None):
@@ -11,15 +12,25 @@ class MapDisplay(DisplayObj,Rectboard):
         DisplayObj.__init__(self)
         self.x= 20
         self.y= 20
-        self.tsize = 25
+        self.tsize = 32
         self.width = self.tsize*self.shape[1]
         self.height = self.tsize*self.shape[0]
+        self.bgsheet = Sheet('assets/images/terrain.png',self.tsize)
+        self.fgsheet = Sheet('assets/images/beacon.png',self.tsize)
+
     def draw(self,surface):
         """Draw map on surface"""
+        tilemgr = TileMgr()
         for loc in self.alllocs:
-            color = tileinfo.color(self.map[loc])
+            tile = tilemgr.tile(self.map[loc])
             point = self.loctopoint(loc)
-            pg.draw.rect(surface,color,(point[0],point[1],self.tsize,self.tsize),0)
+            pg.draw.rect(surface,tile.color,(point[0],point[1],self.tsize,self.tsize),0)
+            if tile.bg != None:
+                image = self.bgsheet.image_num(tile.bg)
+                surface.blit(image,(point[0],point[1],self.tsize,self.tsize))
+            if tile.fg != None:
+                image = self.fgsheet.image_num(tile.fg,-1)
+                surface.blit(image,(point[0],point[1],self.tsize,self.tsize))
 
     def loctopoint(self,loc):
        """Given a location of the map returns the corresponding surface point"""

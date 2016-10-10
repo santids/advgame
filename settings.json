@@ -1,4 +1,5 @@
 {"width":640,
  "height":480,
- "level-path":"levels/level"
+ "level-path":"levels/level",
+ "tsize":32
 }
