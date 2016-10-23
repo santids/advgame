@@ -28,6 +28,7 @@ class MapEditor:
         self.startportal = None
         self.endportal = None
         self.portalmode = 0
+        self.portals = dict()
         self.verbose = False
         
         self.restart()
@@ -55,7 +56,7 @@ class MapEditor:
                     loc = self.world.pointtoloc(event.pos)
                     if self.verbose:
                         print "Clic",loc,event.pos
-                    if loc != None:
+                    if loc != None and self.portalmode == 0:
                         self.world.map[loc] = self.color
                     if self.portalmode == 1:
                         self.startportal = loc
@@ -69,7 +70,7 @@ class MapEditor:
                     if event.key == K_s:
                         mapaslist = self.world.map.tolist()
                         mapout = open(self.filename,'w')
-                        d = {"map":mapaslist}
+                        d = {"map":mapaslist,"portals":self.portals}
                         json.dump(d,mapout)
                         mapout.close()
     
@@ -96,6 +97,7 @@ class MapEditor:
         key = "_".join(str(v) for v in self.startportal)
         value = tuple(["0"])+self.endportal
         d = {key:value}
+        self.portals[key] = value
         print json.dumps(d)
                             
 if __name__ == '__main__':

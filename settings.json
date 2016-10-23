@@ -1,5 +1,6 @@
 {"width":640,
- "height":480,
+ "height":540,
+ "fps":50,
  "level-path":"levels/level",
  "tsize":32
 }

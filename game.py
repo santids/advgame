@@ -43,7 +43,7 @@ class Game():
 class AdvGame(Game):
     def __init__(self,settings=dict()):
         self.settings = settings
-        Game.__init__(self,settings["width"],settings["height"],caption="Adventure Game")
+        Game.__init__(self,settings["width"],settings["height"],fps=settings["fps"],caption="Adventure Game")
     def start(self):
         """Start the game"""
         self.displaylist = []
@@ -72,13 +72,16 @@ class AdvGame(Game):
                     if event.key == K_u:
                         self.dialog.say("hello "+str(random.randint(0,100)))
                         self.dialog.show()
+                    if event.key == K_p:
+                        #Print when necessary
+                        print self.mapdisplay.allitems
+                        print self.mapdisplay.items
                 elif event.type == KEYUP:
                     del self.input[event.key]
                 elif event.type == MOUSEBUTTONDOWN:
                     print "mouse clic",event.pos,self.mapdisplay.pointtoloc(event.pos)
             self.hero.handleinput(self.input,self.dialog)    
-            
-            print self.dialog.main_message, self.dialog.messages,self.dialog.display
+            #Casual prints
             #Draw everything and update
             self.screen.fill(colors.white)
             self.mapdisplay.draw(self.screen)
