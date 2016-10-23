@@ -5,6 +5,7 @@ import json
 
 class Rectboard:
     def __init__(self, shape,mapsrc=None):
+        self.allitems = dict()
         if mapsrc:
             self.loadlevel(mapsrc)
         else:
@@ -25,6 +26,21 @@ class Rectboard:
                     self.portals[nkey] = d[key]
             else :
                 self.portals = dict()
+                
+                
+            if mapsrc in self.allitems:
+                self.items = self.allitems[mapsrc]
+            elif "items" in mapdata:
+                d = mapdata["items"]
+                self.items = dict()
+                for key in d:
+                    nkey = key.split('_')
+                    nkey = tuple([int(n) for n in nkey])
+                    self.items[nkey] = d[key]
+                    self.allitems[mapsrc] = self.items
+            else:
+                self.items = dict() 
+                self.allitems[mapsrc] = self.items
 
     def isValidLoc(self,loc):
         """True if loc is inside map bounds"""

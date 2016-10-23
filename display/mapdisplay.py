@@ -17,6 +17,7 @@ class MapDisplay(DisplayObj,Rectboard):
         self.height = self.tsize*self.shape[0]
         self.bgsheet = Sheet('assets/images/terrain.png',self.tsize)
         self.fgsheet = Sheet('assets/images/beacon.png',self.tsize)
+        self.itsheet = Sheet('assets/images/items.png',self.tsize)
 
     def draw(self,surface):
         """Draw map on surface"""
@@ -31,6 +32,11 @@ class MapDisplay(DisplayObj,Rectboard):
             if tile.fg != None:
                 image = self.fgsheet.image_num(tile.fg,-1)
                 surface.blit(image,(point[0],point[1],self.tsize,self.tsize))
+            if loc in self.items:
+                image = self.itsheet.image_num(0,-1)
+                surface.blit(image,(point[0],point[1],self.tsize,self.tsize))
+
+
 
     def loctopoint(self,loc):
        """Given a location of the map returns the corresponding surface point"""

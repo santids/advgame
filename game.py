@@ -69,7 +69,6 @@ class AdvGame(Game):
                 elif event.type == MOUSEBUTTONDOWN:
                     print "mouse clic",event.pos,self.mapdisplay.pointtoloc(event.pos)
             self.hero.handleinput(self.input)    
-                    
             #Draw everything and update
             self.mapdisplay.draw(self.screen)
             self.hero.draw(self.screen)
