@@ -32,6 +32,7 @@ class DialogBox(DisplayObj):
         self.height = self.font.get_height()*3
         self.display = False
         self.messages = []
+        self.main_message = ""
     def say(self,string):
         """Display Message"""
         if string not in self.messages:
@@ -40,13 +41,23 @@ class DialogBox(DisplayObj):
         """Display Message"""
         self.display = True
     def next(self):
-        if self.messages:
-            del self.messages[0]
-            if not self.messages:
+        if self.main_message != "":
+            self.display = not self.display
+        else:
+            if not self.display:
+                if self.messages:
+                    self.show()
+            else:
                 self.hide()
+                if self.messages:
+                    self.show()
 
     def hide(self):
         """Hide message"""
+        if self.main_message != "":
+            self.main_message = ""
+        elif self.messages:
+            del self.messages[0]
         self.display = False
     def toggle(self):
         """Hide and show"""
@@ -56,8 +67,12 @@ class DialogBox(DisplayObj):
             self.show()
     def draw(self,surface): 
         """Draw messgae box if convenient"""
-        if self.display and self.messages:
-            msg = self.messages[0]
+        if self.display and (self.messages or self.main_message != ""):
+            msg = None
+            if self.main_message != "":
+                msg = self.main_message
+            else:
+                msg = self.messages[0]
             text = self.font.render(msg,True,black)
             r = (self.x,self.y,self.width,self.height)
             pg.draw.rect(surface,white,r)

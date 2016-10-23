@@ -34,8 +34,11 @@ class Hero(Mob):
                 self.score += int(item[1])
                 del self.world.items[centerloc]
             if item[0] == 'sign':
-                dialog.say(item[1])
-                dialog.show()
+                dialog.main_message = item[1]
+        elif dialog.main_message != "":
+            dialog.hide()
+            dialog.next()
+
     def handlemovement(self,input):
         tilemgr = TileMgr()
         deltax = int(math.ceil( self.speed*input["deltatime"]/100))

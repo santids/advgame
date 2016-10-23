@@ -36,9 +36,9 @@ class MapEditor:
         self.color = 1
         self.gamealive = True
         if len(sys.argv) >= 2 and sys.argv[1] != "new":
-            self.world= MapDisplay((24,24),sys.argv[1])
+            self.world= MapDisplay((15,15),sys.argv[1])
         else:
-            self.world= MapDisplay((24,24))
+            self.world= MapDisplay((15,15))
         self.world.draw(self.screen)
         pg.display.update()
         if len(sys.argv) == 3:

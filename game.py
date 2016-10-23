@@ -7,7 +7,7 @@ from hero import Hero
 import display.colors as colors
 from display.text import StatusBar,DialogBox
 import utils.vect2d as vect
-import json
+import json,random
 
 class Game():
     def __init__(self,width,height,fps=25,caption="My Game"):
@@ -69,11 +69,16 @@ class AdvGame(Game):
                     self.input[event.key] = True
                     if event.key == K_SPACE:
                         self.dialog.next()
+                    if event.key == K_u:
+                        self.dialog.say("hello "+str(random.randint(0,100)))
+                        self.dialog.show()
                 elif event.type == KEYUP:
                     del self.input[event.key]
                 elif event.type == MOUSEBUTTONDOWN:
                     print "mouse clic",event.pos,self.mapdisplay.pointtoloc(event.pos)
             self.hero.handleinput(self.input,self.dialog)    
+            
+            print self.dialog.main_message, self.dialog.messages,self.dialog.display
             #Draw everything and update
             self.screen.fill(colors.white)
             self.mapdisplay.draw(self.screen)

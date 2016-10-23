@@ -10,6 +10,7 @@ class Rectboard:
             self.loadlevel(mapsrc)
         else:
             self.map = np.zeros(shape,dtype=int)
+            self.items = dict()
         self.shape = self.map.shape
         self.alllocs = [(r,c) for r in xrange(self.shape[0]) for c in xrange(self.shape[1])]
         self.mapcenter = vect.div(self.shape,2)
