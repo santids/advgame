@@ -5,6 +5,7 @@ import traceback,sys
 from display.mapdisplay import MapDisplay
 from hero import Hero
 import display.colors as colors
+from display.text import StatusBar,DialogBox
 import utils.vect2d as vect
 import json
 
@@ -53,6 +54,8 @@ class AdvGame(Game):
         self.hero.x, self.hero.y = pos
         self.input = dict()
         self.hero.world = self.mapdisplay
+        self.statusbar = StatusBar()
+        self.dialog = DialogBox()
         Game.start(self)
     def gameloop(self):
         """The game loop"""
@@ -64,14 +67,19 @@ class AdvGame(Game):
                     self.close()
                 elif event.type == KEYDOWN:
                     self.input[event.key] = True
+                    if event.key == K_SPACE:
+                        self.dialog.next()
                 elif event.type == KEYUP:
                     del self.input[event.key]
                 elif event.type == MOUSEBUTTONDOWN:
                     print "mouse clic",event.pos,self.mapdisplay.pointtoloc(event.pos)
-            self.hero.handleinput(self.input)    
+            self.hero.handleinput(self.input,self.dialog)    
             #Draw everything and update
+            self.screen.fill(colors.white)
             self.mapdisplay.draw(self.screen)
             self.hero.draw(self.screen)
+            self.statusbar.say("Score:"+str(self.hero.score),self.screen)
+            self.dialog.draw(self.screen)
             pg.display.update()
 
 

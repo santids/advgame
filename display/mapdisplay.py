@@ -33,7 +33,11 @@ class MapDisplay(DisplayObj,Rectboard):
                 image = self.fgsheet.image_num(tile.fg,-1)
                 surface.blit(image,(point[0],point[1],self.tsize,self.tsize))
             if loc in self.items:
-                image = self.itsheet.image_num(0,-1)
+                d = {"coin":0,"sign":1}
+                num = 2
+                if self.items[loc][0] in d:
+                    num = d[self.items[loc][0]]
+                image = self.itsheet.image_num(num,-1)
                 surface.blit(image,(point[0],point[1],self.tsize,self.tsize))
 
 

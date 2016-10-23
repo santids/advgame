@@ -14,11 +14,11 @@ class Hero(Mob):
         self.speed = 10
         self.score = 0
         self.settings = settings
-    def handleinput(self,input):
+    def handleinput(self,input,dialog):
         self.handlemovement(input)
-        self.update()
+        self.update(dialog)
 
-    def update(self):
+    def update(self,dialog):
         centerloc = self.world.pointtoloc(self.center())
         if centerloc in self.world.portals:
             newlevel = self.world.portals[centerloc][0]
@@ -29,11 +29,13 @@ class Hero(Mob):
                 self.level = newlevel
                 self.world.loadlevel(self.settings["level-path"]+newlevel+'.json')
         if centerloc in self.world.items:
-            item = self.world.items[centerloc].split('_')
-            print item
+            item = self.world.items[centerloc]
             if item[0] == 'coin':
                 self.score += int(item[1])
                 del self.world.items[centerloc]
+            if item[0] == 'sign':
+                dialog.say(item[1])
+                dialog.show()
     def handlemovement(self,input):
         tilemgr = TileMgr()
         deltax = int(math.ceil( self.speed*input["deltatime"]/100))

@@ -36,7 +36,7 @@ class Rectboard:
                 for key in d:
                     nkey = key.split('_')
                     nkey = tuple([int(n) for n in nkey])
-                    self.items[nkey] = d[key]
+                    self.items[nkey] = d[key].split('_')
                     self.allitems[mapsrc] = self.items
             else:
                 self.items = dict() 
