@@ -3,6 +3,12 @@ import utils.vect2d as vect
 import numpy as np
 import json
 
+def strtotuple(strchain):
+    l = strchain.split('_')
+    return tuple([int(n) for n in l])
+def tupletostr(inttuple):
+    l = [str(n) for n in inttuple]
+    return "_".join(l)
 class Rectboard:
     def __init__(self, shape,mapsrc=None):
         self.allitems = dict()
@@ -11,6 +17,7 @@ class Rectboard:
         else:
             self.map = np.zeros(shape,dtype=int)
             self.items = dict()
+            self.portals = dict()
         self.shape = self.map.shape
         self.alllocs = [(r,c) for r in xrange(self.shape[0]) for c in xrange(self.shape[1])]
         self.mapcenter = vect.div(self.shape,2)
@@ -22,27 +29,39 @@ class Rectboard:
                 d = mapdata["portals"]
                 self.portals = dict()
                 for key in d:
-                    nkey =key.split('_')
-                    nkey = tuple([int(n) for n in nkey])
+                    nkey = strtotuple(key)
                     self.portals[nkey] = d[key]
             else :
                 self.portals = dict()
-                
-                
             if mapsrc in self.allitems:
                 self.items = self.allitems[mapsrc]
             elif "items" in mapdata:
                 d = mapdata["items"]
                 self.items = dict()
                 for key in d:
-                    nkey = key.split('_')
-                    nkey = tuple([int(n) for n in nkey])
+                    nkey = strtotuple(key)
                     self.items[nkey] = d[key].split('_')
                     self.allitems[mapsrc] = self.items
-                    print self.items
             else:
                 self.items = dict() 
                 self.allitems[mapsrc] = self.items
+    def dumplevel(self,maptarget):
+        """Write the current level in a file (used only by the editor)"""
+        mapfile = open(maptarget, "w")
+        data = dict()
+        data["map"] = self.map.tolist()
+        if self.portals:
+            data["portals"] = dict()
+            for key in self.portals:
+                nkey = tupletostr(key)
+                data["portals"][nkey] = self.portals[key]
+        if self.items:
+            data["items"] = dict()
+            for key in self.items:
+                nkey = tupletostr(key)
+                data["items"][nkey] = tupletostr(self.items[key])
+        json.dump(data,mapfile)
+        mapfile.close()
 
     def isValidLoc(self,loc):
         """True if loc is inside map bounds"""

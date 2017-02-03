@@ -28,7 +28,6 @@ class Hero(Mob):
             if self.level != newlevel:
                 self.level = newlevel
                 self.world.loadlevel(self.settings["level-path"]+newlevel+'.json')
-                print "after loading level", self.world.items
         elif centerloc in self.world.items:
             item = self.world.items[centerloc]
             if item[0] == 'coin':
@@ -36,7 +35,7 @@ class Hero(Mob):
                 del self.world.items[centerloc]
             if item[0] == 'sign':
                 dialog.main_message = item[1]
-            if item[0] == 'trainers' and K_SPACE in input:
+            if item[0] == 'shoes' and K_SPACE in input:
                 self.speed = int(self.speed*float(item[1]))
                 del self.world.items[centerloc]
         elif dialog.main_message != "":

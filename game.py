@@ -47,7 +47,7 @@ class AdvGame(Game):
     def start(self):
         """Start the game"""
         self.displaylist = []
-        self.mapdisplay = MapDisplay((3,3),"levels/level0.json")
+        self.mapdisplay = MapDisplay((3,3),settings["level0"])
         self.hero = Hero(self.settings)
         loc = vect.div(self.mapdisplay.shape,2)
         pos = self.mapdisplay.loctopoint(loc)
