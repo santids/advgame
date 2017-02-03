@@ -37,6 +37,7 @@ class DialogBox(DisplayObj):
         """Display Message"""
         if string not in self.messages:
             self.messages.append(string)
+            self.show()
     def show(self):
         """Display Message"""
         self.display = True

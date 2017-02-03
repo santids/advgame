@@ -54,6 +54,7 @@ class AdvGame(Game):
         self.hero.x, self.hero.y = pos
         self.input = dict()
         self.hero.world = self.mapdisplay
+        self.hero.checkpoint = (self.hero.level,loc)
         self.statusbar = StatusBar()
         self.dialog = DialogBox()
         Game.start(self)
@@ -80,13 +81,13 @@ class AdvGame(Game):
                     del self.input[event.key]
                 elif event.type == MOUSEBUTTONDOWN:
                     print "mouse clic",event.pos,self.mapdisplay.pointtoloc(event.pos)
-            self.hero.handleinput(self.input,self.dialog)    
+            self.hero.update(self.input, self.dialog)    
             #Casual prints
             #Draw everything and update
             self.screen.fill(colors.white)
             self.mapdisplay.draw(self.screen)
             self.hero.draw(self.screen)
-            self.statusbar.say("Score:"+str(self.hero.score),self.screen)
+            self.statusbar.say("Money:"+str(self.hero.money),self.screen)
             self.dialog.draw(self.screen)
             pg.display.update()
 
