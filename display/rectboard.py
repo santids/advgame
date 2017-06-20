@@ -55,6 +55,7 @@ class Rectboard:
                     self.switches[nkey] = d[key]
             else:
                 self.switches = dict()
+ 
             if "artefacts" in mapdata:
                 d = mapdata["artefacts"]
                 self.artefacts = dict()
@@ -84,7 +85,7 @@ class Rectboard:
             data["switches"] = dict()
             for key in self.switches:
                 nkey = tupletostr(key)
-                data["switches"][nkey] = tupletostr(self.switches[key])
+                data["switches"][nkey] = self.switches[key]
         if self.artefacts:
             data["artefacts"] = dict()
             for key in self.artefacts:

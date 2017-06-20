@@ -41,7 +41,7 @@ class MapDisplay(DisplayObj,Rectboard):
                 image = self.itsheet.image_num(num,-1)
                 surface.blit(image,(point[0],point[1],self.tsize,self.tsize))
             if loc in self.artefacts:
-                d = {"light":0}
+                d = {"light":0,"door":0}
                 num = 0
                 if self.artefacts[loc][0] in d:
                     num = d[self.artefacts[loc][0]]
