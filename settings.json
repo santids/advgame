@@ -1,8 +1,9 @@
 {"width":640,
  "height":540,
  "fps":50,
- "level-path":"levels/level",
- "level0":"level0.json",
+ "level-path":"levels/",
+ "level0":"levels/level0.json",
+ "level-prefix":"level",
  "tsize":32,
- "hero-start-loc":[11,6]
+ "hero-start-loc":[9,7]
 }

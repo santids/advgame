@@ -1,5 +1,4 @@
-#Game module
-
+#!/usr/bin/python2.7
 import sys, traceback,random
 import pygame as pg
 from pygame.locals import *
@@ -54,12 +53,6 @@ class PickSurface:
         else:
             return 0
 
-
-
-
-
-
-
 class MapEditor:
     def __init__(self):
         pg.init()
@@ -78,6 +71,7 @@ class MapEditor:
         self.itemsmode = 0
         self.itemcounter = 0
         self.verbose = False
+        self.delmode = False
         self.picksurf = PickSurface() 
         try:
             self.restart()
@@ -116,9 +110,20 @@ class MapEditor:
                         self.color = self.picksurf.getnum(event.pos)
                         tilemgr = TileMgr()
                         print tilemgr.tile(self.color).description
+                    if loc == None:
+                        continue
 
-                    if loc != None and self.portalmode == 0 and self.coinmode == 0 and self.itemsmode == 0:
+                    if self.portalmode == 0 and self.coinmode == 0 and self.itemsmode == 0:
                         self.world.map[loc] = self.color
+                    elif self.delmode:
+                        if loc in self.world.items:
+                            del self.world.items[loc]
+                        if loc in self.world.portals:
+                            del self.world.portals[loc]
+                        if loc in self.world.switches:
+                            del self.world.switches[loc]
+                        if loc in self.world.artefacts:
+                            del self.world.artefacts[loc]
                     elif self.portalmode == 1:
                         self.startportal = loc
                         self.portalmode = 2
@@ -163,6 +168,8 @@ class MapEditor:
                             self.itemsmode = MAINITEMS[0]
                         else:
                             self.itemsmode = 0
+                    elif event.key == K_d:
+                        self.delmode = not (self.delmode)
                     elif event.key == K_SPACE:
                         self.itemcounter += 1
                         if self.itemcounter >= len(MAINITEMS):

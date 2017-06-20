@@ -1,10 +1,12 @@
 import pygame as pg
+import math
 import numpy as np
 from displayobj import DisplayObj
 from rectboard import Rectboard 
 import colors
 from tileinfo import TileMgr
 from spritesheet import Sheet
+
 
 class MapDisplay(DisplayObj,Rectboard):
     def __init__(self,shape,mapsrc=None):
@@ -64,6 +66,8 @@ class MapDisplay(DisplayObj,Rectboard):
        x,y = point
        xloc = (y-self.y)/self.tsize
        yloc = (x-self.x)/self.tsize
+       xloc = int(math.floor(xloc))
+       yloc = int(math.floor(yloc))
 
        if self.isValidLoc((xloc,yloc)):
            return (xloc,yloc)

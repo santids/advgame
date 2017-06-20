@@ -3,8 +3,10 @@ import pygame as pg
 from pygame.locals import *
 import display.colors as colors
 import math,random
+import artefacts
 from display.tileinfo import TileMgr
 from display.spritesheet import Sheet
+import os.path
 
 class Hero(Mob):
     def __init__(self,settings):
@@ -17,7 +19,7 @@ class Hero(Mob):
         self.money= 0
         self.bag = []
         self.settings = settings
-        self.dir = 1 
+        self.dir = 1
         self.idle = True
         self.sheet = Sheet('assets/images/hero.png',self.width)
         self.oldinput = dict()
@@ -68,8 +70,9 @@ class Hero(Mob):
                         artefact[1] = "on"
                     elif artefact[1] == "on":
                         artefact[1] = "off"
+                    artefacts.act(artefact,targetloc,self.world,self)
         elif centerloc in self.world.artefacts:
-            dialog.say(" ".join(self.world.artefacts[centerloc]))
+            dialog.main_message = " ".join(self.world.artefacts[centerloc])
 
         elif dialog.main_message != "":
             dialog.hide()
@@ -77,10 +80,7 @@ class Hero(Mob):
         if tilemgr.tile(self.world.map[centerloc]).description == "checkpoint":
             if K_SPACE in input:
                 if self.checkpoint != (self.level, centerloc):
-                    print "New checkpoint"
                     self.checkpoint = (self.level, centerloc)
-                else:
-                    print "Already your checkpoint"
         if tilemgr.tile(self.world.map[centerloc]).kills:
             self.die()
         self.oldinput = input.copy()
@@ -91,8 +91,17 @@ class Hero(Mob):
         self.x = newpos[0]+(self.world.tsize-self.width)/2
         self.y = newpos[1]+(self.world.tsize-self.height)/2
         if self.level != level:
+            levelpath = self.settings["level-path"]
+            tmppath = os.path.join(levelpath,"tmp")
+            oldname = self.settings["level-prefix"]+self.level+".json"
+            newname = self.settings["level-prefix"]+level+".json"
+
+            self.world.dumplevel(os.path.join(tmppath,oldname )) 
+            if os.path.isfile(os.path.join(tmppath,newname)):
+                self.world.loadlevel(os.path.join(tmppath,newname))
+            else:
+                self.world.loadlevel(os.path.join(levelpath,newname))
             self.level = level
-            self.world.loadlevel(self.settings["level-path"]+level+'.json')
 
     def respawn(self):
         """Reappear in your last checkpoint"""
@@ -119,7 +128,7 @@ class Hero(Mob):
                 cloc = self.world.pointtoloc(self.center())
                 lpos = self.world.loctop(cloc)
                 self.movedown(abs(lpos-self.y))
-            
+
             if tile1.isobstacle and not tile3.isobstacle:
                 self.moveright(1)
             if tile2.isobstacle and not tile3.isobstacle:
@@ -188,5 +197,3 @@ class Hero(Mob):
             nel = " ".join(el)
             l.append(nel)
         return '| '.join(l)
-        
-

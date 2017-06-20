@@ -34,6 +34,10 @@ def inverse(v):
     return (v[0]*(-1),v[1]*(-1))
 def resta(p1,p2):
     return suma(p1,inverse(p2))
+def around(p):
+    l = [suma(p,(1,0)),suma(p,(0,1)),resta(p,(1,0)),resta(p,(0,1))]
+    return l
+
 
 
 if __name__ == '__main__':
