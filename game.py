@@ -1,3 +1,6 @@
+#!/usr/bin/python2.7
+
+
 import pygame as pg
 from pygame.locals import *
 import numpy as np
@@ -50,6 +53,8 @@ class AdvGame(Game):
         self.mapdisplay = MapDisplay((3,3),settings["level0"])
         self.hero = Hero(self.settings)
         loc = vect.div(self.mapdisplay.shape,2)
+        if "hero-start-loc" in settings:
+            loc = settings["hero-start-loc"]
         pos = self.mapdisplay.loctopoint(loc)
         self.hero.x, self.hero.y = pos
         self.input = dict()

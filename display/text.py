@@ -26,7 +26,7 @@ class DialogBox(DisplayObj):
         """Generates a dialog box"""
         DisplayObj.__init__(self)
         self.x = 25
-        self.y = 300
+        self.y = 450
         self.width = 350
         self.font = pg.font.SysFont('Arial',15)
         self.height = self.font.get_height()*3
@@ -38,6 +38,9 @@ class DialogBox(DisplayObj):
         if string not in self.messages:
             self.messages.append(string)
             self.show()
+    def sayAll(self,messagelist):
+        for m in messagelist:
+            self.say(m)
     def show(self):
         """Display Message"""
         self.display = True

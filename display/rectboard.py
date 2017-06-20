@@ -18,6 +18,8 @@ class Rectboard:
             self.map = np.zeros(shape,dtype=int)
             self.items = dict()
             self.portals = dict()
+            self.switches = dict()
+            self.artefacts = dict()
         self.shape = self.map.shape
         self.alllocs = [(r,c) for r in xrange(self.shape[0]) for c in xrange(self.shape[1])]
         self.mapcenter = vect.div(self.shape,2)
@@ -45,6 +47,24 @@ class Rectboard:
             else:
                 self.items = dict() 
                 self.allitems[mapsrc] = self.items
+            if "switches" in mapdata:
+                d = mapdata["switches"]
+                self.switches = dict()
+                for key in d:
+                    nkey = strtotuple(key)
+                    self.switches[nkey] = d[key]
+            else:
+                self.switches = dict()
+            if "artefacts" in mapdata:
+                d = mapdata["artefacts"]
+                self.artefacts = dict()
+                for key in d:
+                    nkey = strtotuple(key)
+                    self.artefacts[nkey] = d[key].split('_')
+            else:
+                self.artefacts = dict()
+
+
     def dumplevel(self,maptarget):
         """Write the current level in a file (used only by the editor)"""
         mapfile = open(maptarget, "w")
@@ -60,6 +80,18 @@ class Rectboard:
             for key in self.items:
                 nkey = tupletostr(key)
                 data["items"][nkey] = tupletostr(self.items[key])
+        if self.switches:
+            data["switches"] = dict()
+            for key in self.switches:
+                nkey = tupletostr(key)
+                data["switches"][nkey] = tupletostr(self.switches[key])
+        if self.artefacts:
+            data["artefacts"] = dict()
+            for key in self.artefacts:
+                nkey = tupletostr(key)
+                data["artefacts"][nkey] = tupletostr(self.artefacts[key])
+
+            
         json.dump(data,mapfile)
         mapfile.close()
 

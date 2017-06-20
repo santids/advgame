@@ -2,6 +2,7 @@
  "height":540,
  "fps":50,
  "level-path":"levels/level",
- "level0":"levels/level1.json",
- "tsize":32
+ "level0":"level0.json",
+ "tsize":32,
+ "hero-start-loc":[11,6]
 }

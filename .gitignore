@@ -2,5 +2,7 @@
 *.pyo
 map*.json
 levels/*.json
+assets/images/*
 *.swp
 *.png
+*.xcf

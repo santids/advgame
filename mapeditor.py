@@ -5,6 +5,8 @@ import pygame as pg
 from pygame.locals import *
 from display import colors
 from display.mapdisplay import MapDisplay
+from display.tileinfo import TileMgr
+from display.spritesheet import Sheet
 import utils.vect2d as vect
 import numpy as np
 import json
@@ -14,8 +16,49 @@ WIDTH = HEIGHT = 650
 FPS = 24
 SHAPE = (12,12)
 KNUMS = [K_1,K_2,K_3,K_4,K_5,K_6,K_7,K_8,K_9]
-TSIZE = 25
-MAINITEMS = ['item','sign','shoes']
+TSIZE = 32
+MAINITEMS = ['item','sign','shoes','stone']
+
+class PickSurface:
+    def __init__(self):
+        self.width = 400
+        self.height = 64
+        self.x = 25
+        self.y = 550
+        self.bgsheet = Sheet('assets/images/terrain.png',TSIZE) 
+        self.fgsheet = Sheet('assets/images/beacon.png',TSIZE)
+        self.numsize = 10
+    def draw(self,surface):
+        surface.fill(colors.black,(self.x,self.y,self.width,self.height))
+        tilemgr = TileMgr()
+        x = self.x
+        y = self.y
+        for n in range(self.numsize):
+            tile = tilemgr.tile(n)
+            pg.draw.rect(surface,tile.color,(x,y,TSIZE,TSIZE))
+            if tile.bg != None:
+                image = self.bgsheet.image_num(tile.bg)
+                surface.blit(image,(x,y,TSIZE,TSIZE))
+            if tile.fg != None:
+                image = self.fgsheet.image_num(tile.fg,-1)
+                surface.blit(image,(x,y,TSIZE,TSIZE))
+            x+=TSIZE
+    def insideSurf(self,(x,y)):
+        return y > self.y and y < self.y+TSIZE and x > self.x and x < self.x+TSIZE*(self.numsize+1)
+    def getnum(self,(x,y)):
+        if y > self.y and y < self.y+TSIZE:
+            num =  (x-self.x)/TSIZE
+            if num>self.numsize:
+                num = 0
+            return num
+        else:
+            return 0
+
+
+
+
+
+
 
 class MapEditor:
     def __init__(self):
@@ -35,8 +78,16 @@ class MapEditor:
         self.itemsmode = 0
         self.itemcounter = 0
         self.verbose = False
-        
-        self.restart()
+        self.picksurf = PickSurface() 
+        try:
+            self.restart()
+        except Exception as ex:
+            print type(ex), ex
+            self.world.dumplevel(self.filename+".tmp")
+            print "temp file saved as tmp: "+self.filename+".tmp"
+            traceback.print_exc()
+            pg.quit()
+            sys.exit()
 
     def restart(self):
         self.color = 1
@@ -61,8 +112,11 @@ class MapEditor:
                     sys.exit()
                 elif event.type == MOUSEBUTTONDOWN:
                     loc = self.world.pointtoloc(event.pos)
-                    if self.verbose:
-                        print "Clic",loc,event.pos
+                    if self.picksurf.insideSurf(event.pos):
+                        self.color = self.picksurf.getnum(event.pos)
+                        tilemgr = TileMgr()
+                        print tilemgr.tile(self.color).description
+
                     if loc != None and self.portalmode == 0 and self.coinmode == 0 and self.itemsmode == 0:
                         self.world.map[loc] = self.color
                     elif self.portalmode == 1:
@@ -117,6 +171,7 @@ class MapEditor:
 
                             
             self.world.draw(self.screen)
+            self.picksurf.draw(self.screen)
             pg.display.update()
     def printportal(self):
         """Writes a portal in the map data"""

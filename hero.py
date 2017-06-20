@@ -20,6 +20,7 @@ class Hero(Mob):
         self.dir = 1 
         self.idle = True
         self.sheet = Sheet('assets/images/hero.png',self.width)
+        self.oldinput = dict()
     def handleinput(self,input,dialog):
         if K_UP in input or K_DOWN in input or K_LEFT in input or K_RIGHT in input:
             self.idle = False
@@ -47,7 +48,8 @@ class Hero(Mob):
                 self.money += int(item[1])
                 del self.world.items[centerloc]
             elif item[0] == 'sign':
-                dialog.main_message = item[1]
+                #dialog.main_message = item[1]
+                dialog.sayAll(item[1:])
             elif item[0] == 'shoes' and K_SPACE in input:
                 self.speed = int(self.speed*float(item[1]))
                 del self.world.items[centerloc]
@@ -57,6 +59,18 @@ class Hero(Mob):
                 del self.world.items[centerloc]
             else:
                 dialog.main_message = " ".join(item)
+        elif centerloc in self.world.switches:
+            if K_SPACE in input and K_SPACE not in self.oldinput:
+                targetloc = tuple(self.world.switches[centerloc])
+                if targetloc in self.world.artefacts:
+                    artefact = self.world.artefacts[targetloc]
+                    if artefact[1] == "off":
+                        artefact[1] = "on"
+                    elif artefact[1] == "on":
+                        artefact[1] = "off"
+        elif centerloc in self.world.artefacts:
+            dialog.say(" ".join(self.world.artefacts[centerloc]))
+
         elif dialog.main_message != "":
             dialog.hide()
             dialog.next()
@@ -69,6 +83,7 @@ class Hero(Mob):
                     print "Already your checkpoint"
         if tilemgr.tile(self.world.map[centerloc]).kills:
             self.die()
+        self.oldinput = input.copy()
 
     def spawn(self,level,loc):
         """Appear anywhere in the whole map"""
@@ -167,7 +182,7 @@ class Hero(Mob):
         image = self.sheet.image_num(self.dir)
         surface.blit(image,(self.x,self.y,self.width,self.height))
     def printbag(self):
-        #Print items
+        """ Print items in bag"""
         l = []
         for el in self.bag:
             nel = " ".join(el)

@@ -19,10 +19,12 @@ class TileMgr:
         self.tiletypes = dict()
         self.tiletypes[0] = TileType(0,False,colors.gray6,0,None,description="simple walkable sand")
         self.tiletypes[1] = TileType(1,True,colors.black,1,None,description="simple wood obstacle")
-        self.tiletypes[2] = TileType(2,bg=0,fg=0,description="portal")
+        self.tiletypes[2] = TileType(2,bg=0,fg=0,description="sand beacon")
         self.tiletypes[3] = TileType(3,False,colors.brown7,description="checkpoint")
+        self.tiletypes[4] = TileType(4,False,bg=2,description="walkable wood")
         self.tiletypes[5] = TileType(5,False,colors.red7,kills=True,description="lava")
-    
+        self.tiletypes[6] = TileType(6,bg=2,fg=0,description="wooden floor beacon")
+
         self.defaulttile = TileType(256)
     def tile(self,num):
         if num in self.tiletypes:

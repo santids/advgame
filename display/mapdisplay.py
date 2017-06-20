@@ -18,6 +18,7 @@ class MapDisplay(DisplayObj,Rectboard):
         self.bgsheet = Sheet('assets/images/terrain.png',self.tsize)
         self.fgsheet = Sheet('assets/images/beacon.png',self.tsize)
         self.itsheet = Sheet('assets/images/items.png',self.tsize)
+        self.artesheet = Sheet('assets/images/artefacts.png',self.tsize)
 
     def draw(self,surface):
         """Draw map on surface"""
@@ -33,11 +34,20 @@ class MapDisplay(DisplayObj,Rectboard):
                 image = self.fgsheet.image_num(tile.fg,-1)
                 surface.blit(image,(point[0],point[1],self.tsize,self.tsize))
             if loc in self.items:
-                d = {"coin":1,"sign":2,"trainers":4}
+                d = {"coin":1,"sign":2,"shoes":4}
                 num = 0
                 if self.items[loc][0] in d:
                     num = d[self.items[loc][0]]
                 image = self.itsheet.image_num(num,-1)
+                surface.blit(image,(point[0],point[1],self.tsize,self.tsize))
+            if loc in self.artefacts:
+                d = {"light":0}
+                num = 0
+                if self.artefacts[loc][0] in d:
+                    num = d[self.artefacts[loc][0]]
+                    if self.artefacts[loc][1] == "on":
+                        num += 1
+                image = self.artesheet.image_num(num,-1)
                 surface.blit(image,(point[0],point[1],self.tsize,self.tsize))
 
 
