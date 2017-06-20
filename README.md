@@ -12,3 +12,5 @@ Pygame tile based adventure game
 - `r` : Respawn
 
 
+# Screenshots
+![screenshot1](https://github.com/santids/advgame/blob/dev/screenshots/shot1.png)
